@@ -149,6 +149,9 @@ function handleRequest(request, response) {
       break;
 
     case "download": {
+      // Auth secured endpoint
+      checkUserPermission(parsedUrl);
+
       const boardName = validateBoardName(parts[1]);
       let history_file = path.join(
               config.HISTORY_DIR,
@@ -172,6 +175,9 @@ function handleRequest(request, response) {
 
     case "export":
     case "preview": {
+      // Auth secured endpoint
+      checkUserPermission(parsedUrl);
+
       const boardName = validateBoardName(parts[1]),
           history_file = path.join(
               config.HISTORY_DIR,
@@ -196,14 +202,18 @@ function handleRequest(request, response) {
       break;
     }
 
-    case "random":
+    case "random": {
+      // Auth secured endpoint
+      checkUserPermission(parsedUrl);
+
       const name = crypto
-        .randomBytes(32)
-        .toString("base64")
-        .replace(/[^\w]/g, "-");
-      response.writeHead(307, { Location: "boards/" + name });
+          .randomBytes(32)
+          .toString("base64")
+          .replace(/[^\w]/g, "-");
+      response.writeHead(307, {Location: "boards/" + name});
       response.end(name);
       break;
+    }
 
     case "polyfill.js": // serve tailored polyfills
     case "polyfill.min.js":
