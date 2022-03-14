@@ -36,9 +36,8 @@ module.exports = {
   /** Maximum messages per user over the given time period before banning them  */
   MAX_EMIT_COUNT: parseInt(process.env["WBO_MAX_EMIT_COUNT"]) || 192,
 
-  /** Duration after which the emit count is reset in miliseconds */
-  MAX_EMIT_COUNT_PERIOD:
-    parseInt(process.env["WBO_MAX_EMIT_COUNT_PERIOD"]) || 4096,
+  /** Duration after which the emit count is reset in milliseconds */
+  MAX_EMIT_COUNT_PERIOD: parseInt(process.env["WBO_MAX_EMIT_COUNT_PERIOD"]) || 4096,
 
   /** Blocked Tools. A comma-separated list of tools that should not appear on boards. */
   BLOCKED_TOOLS: (process.env["WBO_BLOCKED_TOOLS"] || "").split(","),
