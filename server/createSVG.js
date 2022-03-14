@@ -209,7 +209,7 @@ async function toSVG(obj, writeable) {
 
 async function renderBoard(file, stream) {
   const data = await fs.promises.readFile(file);
-  var board = JSON.parse(data);
+  const board = JSON.parse(data);
   return toSVG(board, stream);
 }
 

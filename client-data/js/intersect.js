@@ -62,8 +62,8 @@ if (!SVGGraphicsElement.prototype.transformedBBox || !SVGGraphicsElement.prototy
 	}
 
 	SVGGraphicsElement.prototype.transformedBBox = function (scale=1) {
-	    bbox = this.getBBox();
-	    tmatrix = get_transform_matrix(this);
+	    const bbox = this.getBBox();
+	    const tmatrix = get_transform_matrix(this);
 	    tmatrix.e /= scale;
 	    tmatrix.f /= scale;
 	    return {
@@ -74,13 +74,13 @@ if (!SVGGraphicsElement.prototype.transformedBBox || !SVGGraphicsElement.prototy
 	}
 
 	SVGSVGElement.prototype.transformedBBox = function (scale=1) {
-	    bbox = {
+	    const bbox = {
 		x: this.x.baseVal.value,
 		y: this.y.baseVal.value,
 		width: this.width.baseVal.value,
 		height: this.height.baseVal.value
 	    };
-	    tmatrix = get_transform_matrix(this);
+	    const tmatrix = get_transform_matrix(this);
 	    tmatrix.e /= scale;
 	    tmatrix.f /= scale;
 	    return {

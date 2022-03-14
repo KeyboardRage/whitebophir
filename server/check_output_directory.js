@@ -14,7 +14,7 @@ async function get_error(directory) {
     return "does not exist";
   }
   if (!fs.statSync(directory).isDirectory()) {
-    error = "exists, but is not a directory";
+    return "exists, but is not a directory";
   }
   const { uid, gid } = os.userInfo();
   const tmpfile = path.join(directory, Math.random() + ".json");
