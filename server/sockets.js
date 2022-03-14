@@ -30,19 +30,19 @@ function noFail(fn) {
 
 function startIO(app) {
   const io = iolib(app);
-  if (config.AUTH_SECRET_KEY) {
-    // Middleware to check for valid jwt
-    io.use(function(socket, next) {
-      if(socket.handshake.query && socket.handshake.query.token) {
-        jsonwebtoken.verify(socket.handshake.query.token, config.AUTH_SECRET_KEY, function(err) {
-          if(err) return next(new Error("Authentication error: Invalid JWT"));
-          next();
-        })
-      } else {
-        next(new Error("Authentication error: No jwt provided"));
-      }
-    });
-  }
+  // if (config.AUTH_SECRET_KEY) {
+  //   // Middleware to check for valid jwt
+  //   io.use(function(socket, next) {
+  //     if(socket.handshake.query && socket.handshake.query.token) {
+  //       jsonwebtoken.verify(socket.handshake.query.token, config.AUTH_SECRET_KEY, function(err) {
+  //         if(err) return next(new Error("Authentication error: Invalid JWT"));
+  //         next();
+  //       })
+  //     } else {
+  //       next(new Error("Authentication error: No jwt provided"));
+  //     }
+  //   });
+  // }
   io.on("connection", noFail(handleSocketConnection));
   return io;
 }
