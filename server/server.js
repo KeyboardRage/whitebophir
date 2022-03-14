@@ -125,7 +125,7 @@ function handleRequest(request, response) {
   const fileExt = path.extname(parsedUrl.pathname);
   const staticResources = ['.js','.css', '.svg', '.ico', '.png', '.jpg', '.gif', '.css'];
   // If we're not being asked for a file, then we should check permissions.
-  if(!staticResources.includes(fileExt)) {
+  if(fileExt && !staticResources.includes(fileExt)) {
     checkUserPermission(parsedUrl);
   }
 
