@@ -26,3 +26,4 @@ wbo-backup*
 tests_output/
 
 binned/
+.env
