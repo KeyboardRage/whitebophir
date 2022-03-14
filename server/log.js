@@ -11,7 +11,7 @@ function parse_statsd_url(url) {
   const match = url.match(regex);
   if (!match)
     throw new Error("Invalid statsd connection string, doesn't match " + regex);
-  const [_, protocol, host, port_str] = match;
+  const [protocol, host, port_str] = match.slice(1);
   const tcp = protocol === "tcp";
   const port = parseInt(port_str);
   return { tcp, host, port, prefix: "wbo" };
@@ -41,7 +41,7 @@ if (statsd) {
  * @param {any} infos
  */
 function log(type, infos) {
-  var msg = type;
+  let msg = type;
   if (infos) msg += "\t" + JSON.stringify(infos);
   if (statsd) {
     let stat_name = type;

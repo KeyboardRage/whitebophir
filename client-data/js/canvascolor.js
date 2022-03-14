@@ -35,11 +35,11 @@
 // @use_types_for_optimization true
 // ==/ClosureCompiler==
 
-var canvascolor = (function() {//Code Isolation
+const canvascolor = (function() {//Code Isolation
     "use strict";
 
     (function addCSS () {
-        var styleTag = document.createElement("style");
+        const styleTag = document.createElement("style");
         styleTag.innerHTML = [".canvascolor-container{",
             "background-color:black;",
             "border-radius:5px;",
@@ -65,7 +65,7 @@ var canvascolor = (function() {//Code Isolation
         if( s === 0 ) return [v,v,v]; // achromatic (grey)
 
         h /= (Math.PI/6);			// sector 0 to 5
-        var i = h|0,
+        const i = h|0,
             f = h - i,			// factorial part of h
             p = v * ( 1 - s ),
             q = v * ( 1 - s * f ),
@@ -87,42 +87,42 @@ var canvascolor = (function() {//Code Isolation
         return false;
     }
 
-    var containerTemplate;
+    let containerTemplate;
     (function createContainer(){
         containerTemplate = document.createElement("div");
         containerTemplate.className = "canvascolor-container";
-        var canvas = document.createElement("canvas");
-        var historyDiv = document.createElement("div");
+        const canvas = document.createElement("canvas");
+        const historyDiv = document.createElement("div");
         historyDiv.className = "canvascolor-history";
         containerTemplate.appendChild(canvas);
         containerTemplate.appendChild(historyDiv);
     })();
 
     function canvascolor(elem) {
-        var curcolor = elem.value || "#000";
+        let curcolor = elem.value || "#000";
 
-        var w=200, h=w/2;
+        const w=200, h=w/2;
 
-        var container = containerTemplate.cloneNode(true);
+        const container = containerTemplate.cloneNode(true);
         container.style.width = w+"px";
         container.style.position = isFixedPosition(elem) ? "fixed" : "absolute";
-        var canvas = container.getElementsByTagName("canvas")[0];
-        var ctx = canvas.getContext("2d");
+        const canvas = container.getElementsByTagName("canvas")[0];
+        const ctx = canvas.getContext("2d");
         canvas.width = w; canvas.height=h;
 
-        var prevcolorsDiv = container.getElementsByClassName("canvascolor-history")[0];
+        const prevcolorsDiv = container.getElementsByClassName("canvascolor-history")[0];
         prevcolorsDiv.style.width=w+"px";
         prevcolorsDiv.style.maxHeight=h+"px";
 
-        var previewdiv = createColorDiv(curcolor);
+        const previewdiv = createColorDiv(curcolor);
         previewdiv.style.border = "1px solid white";
         previewdiv.style.borderRadius = "5px";
 
         document.body.appendChild(container);
 
         function displayContainer(){
-            var rect = elem.getBoundingClientRect();
-            var conttop=(rect.top+rect.height+3),
+            const rect = elem.getBoundingClientRect();
+            let conttop=(rect.top+rect.height+3),
                 contleft=rect.left;
             if (container.style.position !== "fixed") {
                 conttop += document.documentElement.scrollTop;
@@ -144,7 +144,7 @@ var canvascolor = (function() {//Code Isolation
 
         changeColor(elem.value, true);
 
-        var idata = ctx.createImageData(w,h);
+        const idata = ctx.createImageData(w,h);
 
         function rgb2hex (rgb) {
             function num2hex (c) {return (c*15/255|0).toString(16);}
@@ -152,15 +152,15 @@ var canvascolor = (function() {//Code Isolation
         }
 
         function colorAt(coords) {
-            var x=coords[0], y=coords[1];
+            const x=coords[0], y=coords[1];
             return hsv2rgb(x/w*Math.PI, 1, (1-y/h)*255);
         }
 
         function render() {
-            for (var x=0; x<w; x++) {
-                for (var y=0;y<h; y++) {
-                    var i = 4*(x+y*w);
-                    var rgb = colorAt([x,y]);
+            for (let x=0; x<w; x++) {
+                for (let y=0;y<h; y++) {
+                    const i = 4*(x+y*w);
+                    const rgb = colorAt([x,y]);
                     idata.data[i] = rgb[0];//Red
                     idata.data[i+1] = rgb[1];//Green
                     idata.data[i+2] = rgb[2];//Blue
@@ -190,7 +190,7 @@ var canvascolor = (function() {//Code Isolation
         }
 
         function createColorDiv (color) {
-            var div = document.createElement("div");
+            const div = document.createElement("div");
             div.style.width = (w/3-10)+"px";
             div.style.height = (h/3-8)+"px";
             div.style.backgroundColor = color;
@@ -203,18 +203,18 @@ var canvascolor = (function() {//Code Isolation
         }
 
         function canvasPos(evt) {
-            var canvasrect = canvas.getBoundingClientRect();
+            const canvasrect = canvas.getBoundingClientRect();
             return [evt.clientX - canvasrect.left, evt.clientY - canvasrect.top];
         }
 
         canvas.addEventListener("mousemove", function(evt){
-            var coords = canvasPos(evt);
+            const coords = canvasPos(evt);
             previewdiv.style.backgroundColor = rgb2hex(colorAt(coords));
         }, true);
 
         canvas.addEventListener("click", function(evt){
-            var coords = canvasPos(evt);
-            var color = rgb2hex(colorAt(coords));
+            const coords = canvasPos(evt);
+            const color = rgb2hex(colorAt(coords));
             createColorDiv(color);
             changeColor(color);
         }, true);
@@ -227,9 +227,9 @@ var canvascolor = (function() {//Code Isolation
 
     //Put a color picker on every input[type=color] if the browser doesn't support this input type
     //and on every input with the class canvascolor
-    var pickers = document.querySelectorAll("input.canvascolor, input[type=color]");
-    for (var i=0;i <pickers.length; i++) {
-        var input = pickers.item(i);
+    const pickers = document.querySelectorAll("input.canvascolor, input[type=color]");
+    for (let i=0;i <pickers.length; i++) {
+        const input = pickers.item(i);
         //If the browser supports native color picker and the user didn't
         //explicitly added canvascolor to the element, we do not add a custom color picker
         if (input.type !== "color" ||

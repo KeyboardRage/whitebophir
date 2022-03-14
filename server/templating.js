@@ -20,10 +20,10 @@ handlebars.registerHelper({
 });
 
 function findBaseUrl(req) {
-  var proto =
+  const proto =
     req.headers["X-Forwarded-Proto"] ||
     (req.connection.encrypted ? "https" : "http");
-  var host = req.headers["X-Forwarded-Host"] || req.headers.host;
+  const host = req.headers["X-Forwarded-Host"] || req.headers.host;
   return proto + "://" + host;
 }
 
@@ -55,8 +55,8 @@ class Template {
   serve(request, response) {
     const parsedUrl = url.parse(request.url, true);
     const parameters = this.parameters(parsedUrl, request);
-    var body = this.template(parameters);
-    var headers = {
+    const body = this.template(parameters);
+    const headers = {
       "Content-Length": Buffer.byteLength(body),
       "Content-Type": "text/html",
       "Cache-Control": "public, max-age=3600",
@@ -76,7 +76,7 @@ class BoardTemplate extends Template {
     const boardUriComponent = parts[1];
     params["boardUriComponent"] = boardUriComponent;
     params["board"] = decodeURIComponent(boardUriComponent);
-    params["hideMenu"] = parsedUrl.query.hideMenu == "true" || false;
+    params["hideMenu"] = parsedUrl.query.hideMenu === "true" || false;
     return params;
   }
 }

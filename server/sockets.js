@@ -1,4 +1,4 @@
-var iolib = require("socket.io"),
+const iolib = require("socket.io"),
   { log, gauge, monitorFunction } = require("./log.js"),
   BoardData = require("./boardData.js").BoardData,
   config = require("./configuration"),
@@ -7,7 +7,7 @@ var iolib = require("socket.io"),
 /** Map from name to *promises* of BoardData
   @type {{[boardName: string]: Promise<BoardData>}}
 */
-var boards = {};
+const boards = {};
 
 /**
  * Prevents a function from throwing errors.
@@ -29,12 +29,12 @@ function noFail(fn) {
 }
 
 function startIO(app) {
-  io = iolib(app);
+  const io = iolib(app);
   if (config.AUTH_SECRET_KEY) {
     // Middleware to check for valid jwt
     io.use(function(socket, next) {
       if(socket.handshake.query && socket.handshake.query.token) {
-        jsonwebtoken.verify(socket.handshake.query.token, config.AUTH_SECRET_KEY, function(err, decoded) {
+        jsonwebtoken.verify(socket.handshake.query.token, config.AUTH_SECRET_KEY, function(err) {
           if(err) return next(new Error("Authentication error: Invalid JWT"));
           next();
         })
@@ -54,7 +54,7 @@ function getBoard(name) {
   if (boards.hasOwnProperty(name)) {
     return boards[name];
   } else {
-    var board = BoardData.load(name);
+    const board = BoardData.load(name);
     boards[name] = board;
     gauge("boards in memory", Object.keys(boards).length);
     return board;
@@ -77,7 +77,7 @@ function handleSocketConnection(socket) {
     // Join the board
     socket.join(name);
 
-    var board = await getBoard(name);
+    const board = await getBoard(name);
     board.users.add(socket.id);
     log("board joined", { board: board.name, users: board.users.size });
     gauge("connected." + name, board.users.size);
@@ -92,23 +92,23 @@ function handleSocketConnection(socket) {
   );
 
   socket.on("getboard", async function onGetBoard(name) {
-    var board = await joinBoard(name);
+    const board = await joinBoard(name);
     //Send all the board's data as soon as it's loaded
     socket.emit("broadcast", { _children: board.getAll() });
   });
 
   socket.on("joinboard", noFail(joinBoard));
 
-  var lastEmitSecond = (Date.now() / config.MAX_EMIT_COUNT_PERIOD) | 0;
-  var emitCount = 0;
+  let lastEmitSecond = (Date.now() / config.MAX_EMIT_COUNT_PERIOD) | 0;
+  let emitCount = 0;
   socket.on(
     "broadcast",
     noFail(function onBroadcast(message) {
-      var currentSecond = (Date.now() / config.MAX_EMIT_COUNT_PERIOD) | 0;
+      const currentSecond = (Date.now() / config.MAX_EMIT_COUNT_PERIOD) | 0;
       if (currentSecond === lastEmitSecond) {
         emitCount++;
         if (emitCount > config.MAX_EMIT_COUNT) {
-          var request = socket.client.request;
+          const request = socket.client.request;
           if (emitCount % 100 === 0) {
             log("BANNED", {
               user_agent: request.headers["user-agent"],
@@ -125,8 +125,8 @@ function handleSocketConnection(socket) {
         lastEmitSecond = currentSecond;
       }
 
-      var boardName = message.board || "anonymous";
-      var data = message.data;
+      const boardName = message.board || "anonymous";
+      const data = message.data;
 
       if (!socket.rooms.has(boardName)) socket.join(boardName);
 
@@ -154,9 +154,9 @@ function handleSocketConnection(socket) {
   socket.on("disconnecting", function onDisconnecting(reason) {
     socket.rooms.forEach(async function disconnectFrom(room) {
       if (boards.hasOwnProperty(room)) {
-        var board = await boards[room];
+        const board = await boards[room];
         board.users.delete(socket.id);
-        var userCount = board.users.size;
+        const userCount = board.users.size;
         log("disconnection", {
           board: board.name,
           users: board.users.size,
@@ -195,12 +195,12 @@ async function saveHistory(boardName, message) {
   if (!message.tool && !message._children) {
     console.error("Received a badly formatted message (no tool). ", message);
   }
-  var board = await getBoard(boardName);
+  const board = await getBoard(boardName);
   board.processMessage(message);
 }
 
 function generateUID(prefix, suffix) {
-  var uid = Date.now().toString(36); //Create the uids in chronological order
+  let uid = Date.now().toString(36); //Create the uids in chronological order
   uid += Math.round(Math.random() * 36).toString(36); //Add a random character at the end
   if (prefix) uid = prefix + uid;
   if (suffix) uid = uid + suffix;

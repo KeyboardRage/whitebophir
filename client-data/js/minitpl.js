@@ -26,7 +26,7 @@
 
 Minitpl = (function () {
 
-	function Minitpl(elem, data) {
+	function Minitpl(elem) {
 		this.elem = (typeof (elem) === "string") ? document.querySelector(elem) : elem;
 		if (!elem) {
 			throw "Invalid element!";
@@ -44,11 +44,11 @@ Minitpl = (function () {
 	}
 
 	Minitpl.prototype.add = function (data) {
-		var newElem = this.elem.cloneNode(true);
+		const newElem = this.elem.cloneNode(true);
 		if (typeof (data) === "object") {
-			for (var key in data) {
-				var matches = newElem.querySelectorAll(key);
-				for (var i = 0; i < matches.length; i++) {
+			for (const key in data) {
+				const matches = newElem.querySelectorAll(key);
+				for (let i = 0; i < matches.length; i++) {
 					transform(matches[i], data[key]);
 				}
 			}

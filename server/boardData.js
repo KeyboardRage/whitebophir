@@ -25,7 +25,7 @@
  * @module boardData
  */
 
-var fs = require("./fs_promises.js"),
+let fs = require("./fs_promises.js"),
   log = require("./log.js").log,
   path = require("path"),
   config = require("./configuration.js"),
@@ -70,7 +70,7 @@ class BoardData {
    * @returns {boolean} - True if the child was added, else false
    */
   addChild(parentId, child) {
-    var obj = this.board[parentId];
+    let obj = this.board[parentId];
     if (typeof obj !== "object") return false;
     if (Array.isArray(obj._children)) obj._children.push(child);
     else obj._children = [child];
@@ -89,9 +89,9 @@ class BoardData {
     delete data.type;
     delete data.tool;
 
-    var obj = this.board[id];
+    let obj = this.board[id];
     if (typeof obj === "object") {
-      for (var i in data) {
+      for (let i in data) {
         obj[i] = data[i];
       }
     } else if (create || obj !== undefined) {
@@ -105,13 +105,13 @@ class BoardData {
    * @param {BoardElem} data - Object containing the id of the new copied element.
    */
   copy(id, data) {
-    var obj = this.board[id];
-    var newid = data.newid;
+    const obj = this.board[id];
+    const newid = data.newid;
     if (obj) {
-      var newobj = JSON.parse(JSON.stringify(obj));
+      const newobj = JSON.parse(JSON.stringify(obj));
       newobj.id = newid;
       if (newobj._children) {
-        for (var child of newobj._children) {
+        for (const child of newobj._children) {
           child.parent = newid;
         }
       }
@@ -208,9 +208,9 @@ class BoardData {
   async _unsafe_save() {
     this.lastSaveDate = Date.now();
     this.clean();
-    var file = this.file;
-    var tmp_file = backupFileName(file);
-    var board_txt = JSON.stringify(this.board);
+    const file = this.file;
+    const tmp_file = backupFileName(file);
+    const board_txt = JSON.stringify(this.board);
     if (board_txt === "{}") {
       // empty board
       try {
@@ -237,22 +237,21 @@ class BoardData {
           err: err.toString(),
           tmp_file: tmp_file,
         });
-        return;
       }
     }
   }
 
   /** Remove old elements from the board */
   clean() {
-    var board = this.board;
-    var ids = Object.keys(board);
+    const board = this.board;
+    const ids = Object.keys(board);
     if (ids.length > config.MAX_ITEM_COUNT) {
-      var toDestroy = ids
-        .sort(function (x, y) {
-          return (board[x].time | 0) - (board[y].time | 0);
-        })
-        .slice(0, -config.MAX_ITEM_COUNT);
-      for (var i = 0; i < toDestroy.length; i++) delete board[toDestroy[i]];
+      const toDestroy = ids
+          .sort(function (x, y) {
+            return (board[x].time | 0) - (board[y].time | 0);
+          })
+          .slice(0, -config.MAX_ITEM_COUNT);
+      for (let i = 0; i < toDestroy.length; i++) delete board[toDestroy[i]];
       log("cleaned board", { removed: toDestroy.length, board: this.name });
     }
   }
@@ -281,7 +280,7 @@ class BoardData {
       if (!Array.isArray(item._children)) item._children = [];
       if (item._children.length > config.MAX_CHILDREN)
         item._children.length = config.MAX_CHILDREN;
-      for (var i = 0; i < item._children.length; i++) {
+      for (let i = 0; i < item._children.length; i++) {
         this.validate(item._children[i]);
       }
     }
@@ -291,8 +290,8 @@ class BoardData {
    * @param {string} name - name of the board
    */
   static async load(name) {
-    var boardData = new BoardData(name),
-      data;
+    const boardData = new BoardData(name);
+    let data;
     try {
       data = await fs.promises.readFile(boardData.file);
       boardData.board = JSON.parse(data);
@@ -312,7 +311,7 @@ class BoardData {
       boardData.board = {};
       if (data) {
         // There was an error loading the board, but some data was still read
-        var backup = backupFileName(boardData.file);
+        const backup = backupFileName(boardData.file);
         log("Writing the corrupted file to " + backup);
         try {
           await fs.promises.writeFile(backup, data);
@@ -330,7 +329,7 @@ class BoardData {
  * @param {string} baseName
  */
 function backupFileName(baseName) {
-  var date = new Date().toISOString().replace(/:/g, "");
+  const date = new Date().toISOString().replace(/:/g, "");
   return baseName + "." + date + ".bak";
 }
 
