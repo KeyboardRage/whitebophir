@@ -1,3 +1,4 @@
+require("dotenv").config();
 const path = require("path");
 const app_root = path.dirname(__dirname); // Parent of the directory where this file is
 

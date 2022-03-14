@@ -24,3 +24,5 @@ wbo-backup*
 
 # Nightwatch test results
 tests_output/
+
+binned/
