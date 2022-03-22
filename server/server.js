@@ -129,6 +129,12 @@ function handleRequest(request, response) {
     checkUserPermission(parsedUrl);
   }
 
+  const alreadyExists = name => {
+    return fs.readdirSync(config.HISTORY_DIR)
+        .map(e => e.split(".")[0])
+        .includes("board-" + name);
+  }
+
   switch (parts[0]) {
     case "boards":
       // "boards" refers to the root directory
@@ -139,6 +145,11 @@ function handleRequest(request, response) {
         response.writeHead(301, headers);
         response.end();
       } else if (parts.length === 2 && parsedUrl.pathname.indexOf(".") === -1) {
+        // Check for auth if board doesn't already exist
+        if (!alreadyExists(parts[1])) {
+          checkUserPermission(parsedUrl);
+        }
+
         validateBoardName(parts[1]);
         boardTemplate.serve(request, response);
         // If there is no dot and no directory, parts[1] is the board name

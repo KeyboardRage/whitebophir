@@ -6,6 +6,7 @@ html, body, svg {
 
 #canvas {
 	transform-origin: 0 0;
+	background-color: #333333;
 }
 
 #loadingMessage {
@@ -48,7 +49,7 @@ html, body, svg {
 	position: fixed;
 	margin-bottom: 30px;
 	left: 0;
-	top: 0;
+	bottom: 0;
 	color: black;
 	max-height: 100%;
 	transition-duration: 1s;
@@ -80,10 +81,15 @@ html, body, svg {
 #menu .tools {
 	list-style-type:none;
 	padding:0;
+	display: flex;
 }
 
 #settings {
 	margin-bottom: 20px;
+}
+
+#menuItems {
+	display: flex;
 }
 
 #menu .tool {

@@ -15,6 +15,21 @@ module.exports = {
   HISTORY_DIR:
     process.env["WBO_HISTORY_DIR"] || path.join(app_root, "server-data"),
 
+  /** Enable or disable automatic backup of boards */
+  BACKUP_ENABLED: process.env["WBO_BACKUP_ENABLED"] ? JSON.parse(process.env["WBO_BACKUP_ENABLED"]) : true,
+
+  /** Path to the directory where boards will be backed up to */
+  BACKUP_DIR:
+      process.env["WBO_BACKUP_DIR"] || path.join(app_root, "backups"),
+
+  /** Max count of copies to keep of any board. Replaces the oldest copy with newest  */
+  BACKUP_COPIES:
+      parseInt(process.env["WBO_BACKUP_COPIES"]) || 10,
+
+  /** Time between each backup of a board is taken */
+  BACKUP_INTERVAL_MS:
+    parseInt(process.env["WBO_BACKUP_INTERVAL_MS"]) || 1000*60*60*24,
+
   /** Folder from which static files will be served */
   WEBROOT: process.env["WBO_WEBROOT"] || path.join(app_root, "client-data"),
 

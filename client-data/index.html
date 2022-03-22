@@ -49,14 +49,22 @@
 
 		<div>
 			<p>{{{translations.private_board_description}}}</p>
-			<a href="random" class="wbo-button">{{{translations.create_private_board}}}</a>
+			<p><em>Creating new boards is restricted and requires the secret admin JWT key..</em></p>
+			<label for="jwt1">JWT key:</label>
+			<input type="text" placeholder="eyJhbGciOiJI..." id="jwt1">
+			<a href="random" class="wbo-button" id="random-button">{{{translations.create_private_board}}}</a>
 		</div>
 
 		<div>
 			<p><label for="board">{{{translations.named_private_board_description}}}</label></p>
-			<form action="boards" method="GET">
-				<input type="text" id="board" name="board" required placeholder="{{{translations.board_name_placeholder}}}" />
-				<input type="submit" value="Go">
+			<p><em>Creating new boards is restricted and requires the secret admin JWT key.</em></p>
+			<form action="boards" method="GET" id="new-board">
+				<div>
+					<label for="jwt2">JWT key:</label>
+					<input type="text" placeholder="eyJhbGciOiJI..." id="jwt2">
+				</div>
+				<input type="text" id="board" required placeholder="{{{translations.board_name_placeholder}}}" />
+				<input type="submit" value="Go" id="newBoardBtn">
 			</form>
 		</div>
 
